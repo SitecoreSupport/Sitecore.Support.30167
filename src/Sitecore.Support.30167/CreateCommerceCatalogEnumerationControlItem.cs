@@ -36,10 +36,10 @@ namespace Sitecore.Support.Hooks
                 Log.Info($"Creating {itemName}", this);
                 item = parentItem.Add(itemName, templateItem);
                 item.Editing.BeginEdit();
-                item["View Control"] = "/sitecore/client/Business Component Library/version 1/Layouts/Renderings/Common/Text"; // {7717EB6C-9F90-4C58-826D-5E87722A0318}
+                item["View Control"] = database.GetItem("/sitecore/client/Business Component Library/version 1/Layouts/Renderings/Common/Text").ID.ToString(); // {7717EB6C-9F90-4C58-826D-5E87722A0318}
                 item["View Binding Property"] = "Text";
                 item["Column Width"] = "3";
-                item["Edit Control"] = "/sitecore/client/Business Component Library/version 1/Layouts/Renderings/Common/ComboBox"; // {25D357D3-3648-4336-9B53-55EED7CFA078}
+                item["Edit Control"] = database.GetItem("/sitecore/client/Business Component Library/version 1/Layouts/Renderings/Common/ComboBox").ID.ToString(); // {25D357D3-3648-4336-9B53-55EED7CFA078}
                 item["Edit Binding Property"] = "selectedValue";
                 item.Editing.EndEdit();
             }
