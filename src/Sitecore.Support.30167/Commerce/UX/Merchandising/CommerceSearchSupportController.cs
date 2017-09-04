@@ -81,7 +81,7 @@ namespace Sitecore.Support.Commerce.UX.Merchandising
         public JsonResult GetMultipleChoiceFieldValuesByItemId([FromBody]string[] multipleFieldNames)
         {
             string itemId = this.GetRequestedCommerceId();
-            if (string.IsNullOrWhiteSpace(itemId))
+            if (string.IsNullOrWhiteSpace(itemId) || multipleFieldNames == null)
             {
                 return this.GetEmptyJsonResponse();
             }
