@@ -4,7 +4,7 @@ using Sitecore.Diagnostics;
 using Sitecore.Events.Hooks;
 using Sitecore.SecurityModel;
 
-namespace Sitecore.Support
+namespace Sitecore.Support.Hooks
 {
     public class CreateCommerceCatalogEnumerationControlItem : IHook
     {
