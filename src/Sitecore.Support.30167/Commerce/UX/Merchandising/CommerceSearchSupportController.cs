@@ -44,41 +44,42 @@ namespace Sitecore.Support.Commerce.UX.Merchandising
             }).ToList();
         }
 
-        private List<string> GetValues(string templateId, string fieldName)
+        private List<string> GetValues(string templateId, string fieldName, string itemLanguage)
         {
             CommerceCatalogEnumerationControl commerceCatalogControl = new CommerceCatalogEnumerationControl();
+            commerceCatalogControl.ItemLanguage = itemLanguage;
             var template = Sitecore.Context.ContentDatabase.GetTemplate(templateId);
             commerceCatalogControl.FieldId = template.GetField(fieldName).ID.ToString();
 
             return ((IEnumerable<string>)InvokeRestrictedInstanceMethods(commerceCatalogControl, "GetItems", null)).ToList();
         }
 
-        private Dictionary<string, List<CommerceSearchSupportResultItem>> GetValuesByItemId(string itemId, string[] multipleFieldNames)
+        private Dictionary<string, List<CommerceSearchSupportResultItem>> GetValuesByItemId(string itemId, string[] multipleFieldNames, string itemLanguage)
         {
             Dictionary<string, List<CommerceSearchSupportResultItem>> result = new Dictionary<string, List<CommerceSearchSupportResultItem>>();
 
             foreach (string fieldName in multipleFieldNames)
             {
                 var templateId = Sitecore.Context.ContentDatabase.GetItem(itemId).TemplateID;
-                result.Add(fieldName, GetResultItemsFromFieldValues(GetValues(templateId.ToString(), fieldName)));
+                result.Add(fieldName, GetResultItemsFromFieldValues(GetValues(templateId.ToString(), fieldName, itemLanguage)));
             }
 
             return result;
         }
 
-        private Dictionary<string, List<CommerceSearchSupportResultItem>> GetValuesByTemplateId(string templateId, string[] multipleFieldNames)
+        private Dictionary<string, List<CommerceSearchSupportResultItem>> GetValuesByTemplateId(string templateId, string[] multipleFieldNames, string itemLanguage)
         {
             Dictionary<string, List<CommerceSearchSupportResultItem>> result = new Dictionary<string, List<CommerceSearchSupportResultItem>>();
 
             foreach (string fieldName in multipleFieldNames)
             {
-                result.Add(fieldName, GetResultItemsFromFieldValues(GetValues(templateId, fieldName)));
+                result.Add(fieldName, GetResultItemsFromFieldValues(GetValues(templateId, fieldName, itemLanguage)));
             }
 
             return result;
         }
 
-        public JsonResult GetMultipleChoiceFieldValuesByItemId([FromBody]string[] multipleFieldNames)
+        public JsonResult GetMultipleChoiceFieldValuesByItemId([FromBody]string[] multipleFieldNames, string itemLanguage =  "")
         {
             string itemId = this.GetRequestedCommerceId();
             if (string.IsNullOrWhiteSpace(itemId) || multipleFieldNames == null)
@@ -86,11 +87,11 @@ namespace Sitecore.Support.Commerce.UX.Merchandising
                 return this.GetEmptyJsonResponse();
             }
 
-            var result = this.GetValuesByItemId(itemId, multipleFieldNames);
+            var result = this.GetValuesByItemId(itemId, multipleFieldNames, itemLanguage);
             return base.Json(result);
         }
 
-        public JsonResult GetMultipleChoiceFieldValuesByTemplateId([FromBody]string[] multipleFieldNames)
+        public JsonResult GetMultipleChoiceFieldValuesByTemplateId([FromBody]string[] multipleFieldNames, string itemLanguage = "")
         {
             string templateId = this.GetRequestedCommerceId();
             if (string.IsNullOrWhiteSpace(templateId))
@@ -98,7 +99,7 @@ namespace Sitecore.Support.Commerce.UX.Merchandising
                 return this.GetEmptyJsonResponse();
             }
 
-            var result = this.GetValuesByTemplateId(templateId, multipleFieldNames);
+            var result = this.GetValuesByTemplateId(templateId, multipleFieldNames, itemLanguage);
             return base.Json(result);
         }
     }

@@ -106,7 +106,8 @@ define(["sitecore", "CommerceBasePage", "WorkspaceHelper"], function (Sitecore, 
 					headers: this.ajaxToken,
 					data: {
 						id: productId,
-						multipleFieldNames: this.getMultipleChoiceFieldNames()
+                        multipleFieldNames: this.getMultipleChoiceFieldNames(),
+						itemLanguage: this.get("currentLanguage")
 					},
 					error: CommerceUtilities.IsAuthenticated,
 					success: function (data) {
@@ -250,7 +251,8 @@ define(["sitecore", "CommerceBasePage", "WorkspaceHelper"], function (Sitecore, 
 					headers: this.ajaxToken,
 					data: {
 						id: templateId,
-						multipleFieldNames: this.getMultipleChoiceFieldNames()
+                        multipleFieldNames: this.getMultipleChoiceFieldNames(),
+						itemLanguage: this.get("currentLanguage")
 					},
 					error: CommerceUtilities.IsAuthenticated,
 					success: function (data) {
@@ -448,9 +450,9 @@ define(["sitecore", "CommerceBasePage", "WorkspaceHelper"], function (Sitecore, 
 
             for (var i = 0; i < multipleFieldNames.length; i++) {
                 var fieldName = multipleFieldNames[i];
-				var value = eval("dataObject." + fieldName);
+				var value = eval("dataObject['" + fieldName + "']");
 				if (value == "noItem")
-					eval("dataObject." + fieldName + " = ''");
+					eval("dataObject['" + fieldName + "'] = ''");
             }
 		},
 		
@@ -465,8 +467,8 @@ define(["sitecore", "CommerceBasePage", "WorkspaceHelper"], function (Sitecore, 
                 if (fieldControls.length > 0) {
 					for (var j = 0; j < fieldControls.length; j++) {
 						var fieldControl = fieldControls[j];
-						var field = eval("this." + fieldControl.name);
-						var items = eval("data." + fieldControl.name);
+					    var field = eval("this['" + currentItem[1] + "']");
+					    var items = eval("data['" + currentItem[0] + "']");
 						if (field && items) {
 							var selectedValue = field.get("selectedValue");
 							var noItem = {
